@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width" />
+    <title>wechat</title>
+</head>
+<style>
+	.btn{
+		background-color: #666;
+	}
+</style>
+<body>
+    <div id="app">
+        <div>appid = {{appid}}</div>
+        <div>code = {{code}}</div>
+        <div>state = {{state}}</div>
+        <div>jsret = {{jsret}}</div>
+        <br>
+        <div class="btn" @click='getacctoken'>getaccess_token</div>
+    </div>
+</body>
+<script src="./js/vue2.js"></script>
+<script src="./js/jquery-2.2.3.min.js"></script>
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        code: '',
+        appid: '',
+        state: '',
+        jsret: '',
+        scre:'d45f7431352bdce63ad299b23a4ce35c'
+    },
+    created: function() {
+        this.appid = getParameterByName('wxappid');
+        this.code = getParameterByName('code');
+        this.state = getParameterByName('state');
+    },
+    methods: {
+        getacctoken: function() {
+            var tkurl = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='+this.appid+'&secret='+this.scre+'&code='+this.code+'&grant_type=authorization_code';
+            $.ajax({
+                url: tkurl,
+                type: 'GET',
+                // data: param,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(ret) {
+                    this.jsret = JSON.stringify(ret);
+                },
+                error: function(err) {
+                    this.jsret = JSON.stringify(err);
+                }
+            });
+        }
+    }
+});
+
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+</script>
+
+</html>
